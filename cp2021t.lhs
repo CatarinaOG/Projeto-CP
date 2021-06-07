@@ -702,7 +702,7 @@ Verifique as suas funções testando a propriedade seguinte:
 A média de uma lista não vazia e de uma \LTree\ com os mesmos elementos coincide,
 a menos de um erro de 0.1 milésimas:
 \begin{code}
-prop_avg :: Ord a => [a] -> Property
+prop_avg :: [Double] -> Property
 prop_avg = nonempty .==>. diff .<=. const 0.000001 where
    diff l = avg l - (avgLTree . genLTree) l
    genLTree = anaLTree lsplit
@@ -1023,11 +1023,10 @@ outExpAr (N a) = i2 (i1 a)
 outExpAr (Bin op a b) = i2 (i2 (i1 ( op,( a , b ))))
 outExpAr (Un op a) = i2 (i2 (i2 (op , a)))
 
-
 ---
-recExpAr = undefined
+recExpAr f = baseExpAr id id id f f id f
 ---
-g_eval_exp = undefined
+g_eval_exp a exp = undefined
 ---
 clean = undefined
 ---
@@ -1082,12 +1081,19 @@ avg = p1.avg_aux
 \end{code}
 
 \begin{code}
-avg_aux = undefined
+avg_aux = cataList( either (split (const 0) (const 0)) ( split f g )) where
+    f = \(h , (a , l)) -> (a * l + h)/ (l + 1) 
+    g = \(h , (a , l)) -> l + 1
+
 \end{code}
 Solução para árvores de tipo \LTree:
 \begin{code}
 avgLTree = p1.cataLTree gene where
-   gene = undefined
+   gene = either (split h k) (split f g) where
+    h = \a -> const a
+    k = \a -> const 1
+    f = \((b,c),(d,i)) -> ((b * c) + (d * i)) / (c + i)
+    g = \((b,c),(d,i)) -> (c + i)
 \end{code}
 
 \subsection*{Problema 5}
@@ -1095,8 +1101,7 @@ Inserir em baixo o código \Fsharp\ desenvolvido, entre \verb!\begin{verbatim}! 
 
 \begin{verbatim}
 \end{verbatim}
-
-%----------------- Fim do anexo com soluções dos alunos ------------------------%
+ 
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%
 
