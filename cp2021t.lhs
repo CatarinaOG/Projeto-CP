@@ -1082,16 +1082,14 @@ avg = p1.avg_aux
 
 \begin{code}
 avg_aux = cataList( either (split (const 0) (const 0)) ( split f g )) where
-    f = \(h , (a , l)) -> (a * l + h)/ (l + 1) 
+    f = \(h , (a , l)) -> (a * l + h)/ (l + 1)
     g = \(h , (a , l)) -> l + 1
 
 \end{code}
 Solução para árvores de tipo \LTree:
 \begin{code}
 avgLTree = p1.cataLTree gene where
-   gene = either (split h k) (split f g) where
-    h = \a -> const a
-    k = \a -> const 1
+   gene = either (split id (const 1)) (split f g) where
     f = \((b,c),(d,i)) -> ((b * c) + (d * i)) / (c + i)
     g = \((b,c),(d,i)) -> (c + i)
 \end{code}
